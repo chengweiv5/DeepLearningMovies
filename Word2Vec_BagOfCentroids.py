@@ -65,14 +65,14 @@ if __name__ == '__main__':
     num_clusters = word_vectors.shape[0] / 5
 
     # Initalize a k-means object and use it to extract centroids
-    print "Running K means"
+    print("Running K means")
     kmeans_clustering = KMeans( n_clusters = num_clusters )
     idx = kmeans_clustering.fit_predict( word_vectors )
 
     # Get the end time and print how long the process took
     end = time.time()
     elapsed = end - start
-    print "Time taken for K Means clustering: ", elapsed, "seconds."
+    print("Time taken for K Means clustering: ", elapsed, "seconds.")
 
 
     # Create a Word / Index dictionary, mapping each vocabulary word to
@@ -83,14 +83,14 @@ if __name__ == '__main__':
     for cluster in xrange(0,10):
         #
         # Print the cluster number
-        print "\nCluster %d" % cluster
+        print("\nCluster %d" % cluster)
         #
         # Find all of the words for that cluster number, and print them out
         words = []
         for i in xrange(0,len(word_centroid_map.values())):
             if( word_centroid_map.values()[i] == cluster ):
                 words.append(word_centroid_map.keys()[i])
-        print words
+        print(words)
 
 
 
@@ -103,13 +103,13 @@ if __name__ == '__main__':
     test = pd.read_csv(os.path.join(os.path.dirname(__file__), 'data', 'testData.tsv'), header=0, delimiter="\t", quoting=3 )
 
 
-    print "Cleaning training reviews"
+    print("Cleaning training reviews")
     clean_train_reviews = []
     for review in train["review"]:
         clean_train_reviews.append( KaggleWord2VecUtility.review_to_wordlist( review, \
             remove_stopwords=True ))
 
-    print "Cleaning test reviews"
+    print("Cleaning test reviews")
     clean_test_reviews = []
     for review in test["review"]:
         clean_test_reviews.append( KaggleWord2VecUtility.review_to_wordlist( review, \
@@ -145,11 +145,11 @@ if __name__ == '__main__':
     forest = RandomForestClassifier(n_estimators = 100)
 
     # Fitting the forest may take a few minutes
-    print "Fitting a random forest to labeled training data..."
+    print("Fitting a random forest to labeled training data...")
     forest = forest.fit(train_centroids,train["sentiment"])
     result = forest.predict(test_centroids)
 
     # Write the test results
     output = pd.DataFrame(data={"id":test["id"], "sentiment":result})
     output.to_csv("BagOfCentroids.csv", index=False, quoting=3)
-    print "Wrote BagOfCentroids.csv"
+    print("Wrote BagOfCentroids.csv")
