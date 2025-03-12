@@ -61,8 +61,8 @@ if __name__ == '__main__':
 
     # Set "k" (num_clusters) to be 1/5th of the vocabulary size, or an
     # average of 5 words per cluster
-    word_vectors = model.wv.syn0
-    num_clusters = word_vectors.shape[0] / 5
+    word_vectors = model.wv.vectors
+    num_clusters = int(word_vectors.shape[0] / 5)
 
     # Initalize a k-means object and use it to extract centroids
     print("Running K means")
@@ -77,19 +77,25 @@ if __name__ == '__main__':
 
     # Create a Word / Index dictionary, mapping each vocabulary word to
     # a cluster number
-    word_centroid_map = dict(zip( model.wv.index2word, idx ))
+    word_centroid_map = dict(zip( model.wv.index_to_key, idx ))
 
     # Print the first ten clusters
-    for cluster in xrange(0,10):
+    for cluster in range(0,10):
         #
         # Print the cluster number
         print("\nCluster %d" % cluster)
         #
         # Find all of the words for that cluster number, and print them out
         words = []
-        for i in xrange(0,len(word_centroid_map.values())):
+        '''
+        for i in range(0,len(word_centroid_map.values())):
             if( word_centroid_map.values()[i] == cluster ):
-                words.append(word_centroid_map.keys()[i])
+                words.append(word_centroid_map.keys()[i])'
+        '''
+        for key, value in word_centroid_map.items():
+            if value == cluster:
+                words.append(key)
+
         print(words)
 
 
